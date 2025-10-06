@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        /* Augmente la hauteur pour une meilleure visualisation de l'animation */
-        #map { height: 800px; width: 100%; } 
+        #map { height: 800px; width: 100%; }
     </style>
 </head>
 <body>
@@ -17,30 +16,28 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         // Coordonnées de la Lagune de Porto-Novo
-        var coordsCible = [6.4969, 2.6228]; 
-        var zoomInitial = 2;   // Démarrage sur le globe terrestre
-        var zoomFinal = 13;    // Niveau de zoom pour voir les détails de la lagune
-        var dureeAnimation = 4; // Durée de l'animation en secondes
+        var coordsCible = [6.4969, 2.6228];
+        var zoomFinal = 13; // Le niveau de zoom initial de vos amis
 
-        // 1. INITIALISATION : Démarrage sur le globe
-        var map = L.map('map').setView(coordsCible, zoomInitial); 
+        // 1. INITIALISATION : Démarrage sur le globe (Zoom 2)
+        var map = L.map('map').setView(coordsCible, 2); 
 
-        // 2. Fond de carte OpenStreetMap (conservé comme demandé)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+        // Remplacement du fond : Utilisation du fond satellite ESRI (Aspect Image Aérienne)
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, etc.'
         }).addTo(map);
 
-        // Ajout du marqueur au centre
+        // Ajout du marqueur
         var marker = L.marker(coordsCible).addTo(map)
             .bindPopup('Lagune de Porto-Novo<br>Zone d’étude');
         
-        // 3. EXÉCUTION DE L'ANIMATION (flyTo)
+        // 2. EXÉCUTION DE L'ANIMATION (flyTo)
         // L'animation démarre 1 seconde après le chargement de la carte.
         setTimeout(function() {
             map.flyTo(coordsCible, zoomFinal, {
-                duration: dureeAnimation 
+                duration: 4 // Durée de l'animation en secondes
             });
-            // Ouvre le popup une fois l'animation terminée
+            // Ouvre le popup une fois l'animation terminée pour le rendre visible
             marker.openPopup();
         }, 1000); 
     </script>
