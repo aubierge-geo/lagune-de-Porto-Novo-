@@ -1,77 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Localisation Animée : Lagune de Porto-Novo sur le Globe</title>
+    <title>Carte interactive - Lagune de Porto-Novo (Zoom Animé)</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIINfBIH2g13uN/QoY5A1xJk+SfOzADGFrg="
-          crossorigin=""/>
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        /* Définit la taille du conteneur de la carte */
-        #mapid { 
-            height: 800px; /* Taille pour un bon affichage */
-            width: 100%; 
-        }
+        /* Augmente la hauteur pour une meilleure visualisation de l'animation */
+        #map { height: 800px; width: 100%; } 
     </style>
 </head>
 <body>
+    <h3>Zone d’étude : Lagune de Porto-Novo</h3>
+    <div id="map"></div>
 
-<div id="mapid"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Coordonnées de la Lagune de Porto-Novo
+        var coordsCible = [6.4969, 2.6228]; 
+        var zoomInitial = 2;   // Démarrage sur le globe terrestre
+        var zoomFinal = 13;    // Niveau de zoom pour voir les détails de la lagune
+        var dureeAnimation = 4; // Durée de l'animation en secondes
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20n6a4y9bI2x0i6xK/j1G5t6rD3J0bQzLg2GzFz5Pz0="
-        crossorigin=""></script>
+        // 1. INITIALISATION : Démarrage sur le globe
+        var map = L.map('map').setView(coordsCible, zoomInitial); 
 
-<script>
-    // =========================================================
-    // 2. INITIALISATION : Démarrage sur le Globe (Zoom 2)
-    // =========================================================
+        // 2. Fond de carte OpenStreetMap (conservé comme demandé)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-    // Étape 1 : Centrage initial sur la Lagune de Porto-Novo ([6.40, 2.65]) avec un zoom TRES faible (2)
-    var map = L.map('mapid').setView([6.40, 2.65], 2); 
-
-    // Ajout du fond de carte OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: 'Fond de carte : &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-    // ---------------------------------------------------------
-    // Paramètres de l'animation
-    // ---------------------------------------------------------
-
-    // Coordonnées cibles : Lagune de Porto-Novo
-    var latLngCible = [6.40, 2.65]; 
-
-    // Zoom Cible : Niveau 12 (assez proche pour voir les détails de la lagune)
-    var zoomCible = 12; 
-
-    // Durée de l'animation en secondes
-    var dureeAnimation = 4; 
-
-    // =========================================================
-    // 3. EXÉCUTION DE L'ANIMATION
-    // =========================================================
-
-    // On utilise setTimeout pour donner le temps à la carte de charger avant de zoomer
-    setTimeout(function() {
-        map.flyTo(latLngCible, zoomCible, {
-            duration: dureeAnimation 
-        });
-    }, 1000); // Démarre l'animation 1 seconde après le chargement de la carte
-
-    // =========================================================
-    // 4. Marqueur final (optionnel, mais recommandé pour montrer le point exact)
-    // =========================================================
-    
-    L.marker(latLngCible)
-        .bindPopup("<b>Lagune de Porto-Novo / Zone d'étude</b>")
-        .addTo(map);
-
-</script>
-
+        // Ajout du marqueur au centre
+        var marker = L.marker(coordsCible).addTo(map)
+            .bindPopup('Lagune de Porto-Novo<br>Zone d’étude');
+        
+        // 3. EXÉCUTION DE L'ANIMATION (flyTo)
+        // L'animation démarre 1 seconde après le chargement de la carte.
+        setTimeout(function() {
+            map.flyTo(coordsCible, zoomFinal, {
+                duration: dureeAnimation 
+            });
+            // Ouvre le popup une fois l'animation terminée
+            marker.openPopup();
+        }, 1000); 
+    </script>
 </body>
 </html>
